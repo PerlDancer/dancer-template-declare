@@ -23,3 +23,41 @@ sub render {
 }
 
 1;
+
+=head1 SYNOPSIS
+
+    package myapp::templates;
+    use Template::Declare::Tags;
+    use base 'Template::Declare';
+
+    template hello => sub {
+        my ($self, $vars) = @_;
+        html {
+            head {
+                title {"Hello, $vars->{user}"};
+            };
+            body {
+                h1 {
+                    "Hello, $vars->{user}";
+                };
+            };
+        };
+    };
+
+    package myapp;
+    use myapp::templates;
+    use Dancer ':syntax';
+
+    get '/' => sub {
+        template 'hello', {user => 'marc'};
+    };
+
+    true;
+
+    # in your configuration:
+    template: declare
+    engines:
+      declare:
+        dispatch_to:
+          - myapp::template
+
